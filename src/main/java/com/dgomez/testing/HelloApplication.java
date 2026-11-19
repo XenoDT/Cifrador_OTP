@@ -16,7 +16,9 @@ import javafx.scene.layout.HBox;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
-
+/*
+* Un boton de exportar a un documento de texto y la clave en un archivo binario.
+* */
 public class HelloApplication extends Application {
     private TextField txtClave;
     private TextArea txtMsg;

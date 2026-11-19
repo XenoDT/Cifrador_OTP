@@ -1,59 +1,78 @@
 package com.dgomez.testing;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.SecureRandom;
 import java.util.Base64;
-/*
-* Un boton de exportar a un documento de texto y la clave en un archivo binario.
-* */
+
 public class HelloApplication extends Application {
     private TextField txtClave;
     private TextArea txtMsg;
     private TextArea txtCifMsg;
     private final OneTimePadService otpService = new OneTimePadService();
-    private String estiloOscuro =
+    private final ExportadorOtpService exportadorService = new ExportadorOtpService();
+
+    private final String estiloOscuro =
             "-fx-control-inner-background: black;" +
                     "-fx-background-color: black;" +
                     "-fx-text-fill: cyan;" +
                     "-fx-prompt-text-fill: white;";
+
     @Override
     public void start(Stage stage) {
         txtClave = new TextField();
-        txtClave.setPromptText("CLAVE (misma longitud en bytes que el mensaje)");
+        txtClave.setPromptText("CLAVE (al menos la misma longitud en bytes que el mensaje)");
         txtClave.setStyle(estiloOscuro);
+
         txtMsg = new TextArea();
         txtMsg.setPromptText("Mensaje original...");
         txtMsg.setWrapText(true);
         txtMsg.setStyle(estiloOscuro);
         VBox.setVgrow(txtMsg, Priority.ALWAYS);
+
         Button btnGenClave = new Button("Generar Clave");
         btnGenClave.setOnAction(e -> txtClave.setText(GeneradorClaveOtp.generarClave5k()));
+
         Button btnCif = new Button("Cifrar");
-        btnCif.setPrefWidth(120);
+        btnCif.setPrefWidth(110);
         btnCif.setStyle("-fx-background-radius: 20;");
         btnCif.setOnAction(e -> cifrar());
 
         Button btnDescif = new Button("Descifrar");
-        btnDescif.setPrefWidth(120);
+        btnDescif.setPrefWidth(110);
         btnDescif.setStyle("-fx-background-radius: 20;");
         btnDescif.setOnAction(e -> descifrar());
 
-        HBox filaBotones = new HBox(30, btnCif, btnDescif,btnGenClave);
-        filaBotones.setAlignment(Pos.CENTER);
-        filaBotones.setPadding(new Insets(5, 0, 5, 0));
+        Button btnExportTxt = new Button("Exportar TXT");
+        btnExportTxt.setOnAction(e -> exportarMensajeCifrado(stage));
+
+        Button btnExportBin = new Button("Exportar Clave (.bin)");
+        btnExportBin.setOnAction(e -> exportarClaveBinaria(stage));
+
+        HBox filaAcciones = new HBox(15, btnCif, btnDescif, btnGenClave);
+        filaAcciones.setAlignment(Pos.CENTER);
+        filaAcciones.setPadding(new Insets(5, 0, 0, 0));
+
+        HBox filaExportar = new HBox(15, btnExportTxt, btnExportBin);
+        filaExportar.setAlignment(Pos.CENTER);
+        filaExportar.setPadding(new Insets(0, 0, 5, 0));
 
         txtCifMsg = new TextArea();
         txtCifMsg.setPromptText("Mensaje cifrado (Base64)...");
@@ -61,12 +80,12 @@ public class HelloApplication extends Application {
         txtCifMsg.setStyle(estiloOscuro);
         VBox.setVgrow(txtCifMsg, Priority.ALWAYS);
 
-        VBox root = new VBox(15, txtClave, txtMsg, filaBotones, txtCifMsg);
-        root.setStyle("-fx-background-color: #373737;-fx-border-color: white");
+        VBox root = new VBox(12, txtClave, txtMsg, filaAcciones, filaExportar, txtCifMsg);
+        root.setStyle("-fx-background-color: #373737; -fx-border-color: white");
         root.setPadding(new Insets(25));
         root.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(root, 480, 500);
+        Scene scene = new Scene(root, 520, 540);
         stage.setTitle("One-Time Pad - JavaFX");
         stage.setScene(scene);
         stage.show();
@@ -77,7 +96,7 @@ public class HelloApplication extends Application {
             String resultadoBase64 = otpService.cifrar(txtMsg.getText(), txtClave.getText());
             txtCifMsg.setText(resultadoBase64);
         } catch (IllegalArgumentException ex) {
-            mostrarError(ex.getMessage());
+            mostrarError("Error de validación / OTP", ex.getMessage());
         }
     }
 
@@ -86,13 +105,78 @@ public class HelloApplication extends Application {
             String mensajeRecuperado = otpService.descifrar(txtCifMsg.getText(), txtClave.getText());
             txtMsg.setText(mensajeRecuperado);
         } catch (IllegalArgumentException ex) {
-            mostrarError(ex.getMessage());
+            mostrarError("Error de validación / OTP", ex.getMessage());
         }
     }
 
-    private void mostrarError(String mensaje) {
+    private void exportarMensajeCifrado(Stage stage) {
+        String cifrado = txtCifMsg.getText();
+        if (cifrado == null || cifrado.isBlank()) {
+            mostrarError("Exportación cancelada", "No hay ningún mensaje cifrado para exportar.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar mensaje cifrado");
+        fileChooser.setInitialFileName("mensaje_cifrado.txt");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Archivos de texto (*.txt)", "*.txt")
+        );
+
+        java.io.File seleccionado = fileChooser.showSaveDialog(stage);
+        if (seleccionado == null) {
+            return;
+        }
+
+        try {
+            Path destino = seleccionado.toPath();
+            exportadorService.exportarTextoUtf8(destino, cifrado);
+            mostrarInfo("Exportación completada", "Mensaje cifrado guardado en:\n" + destino.toAbsolutePath());
+        } catch (IOException ex) {
+            mostrarError("Error de E/S", "No se pudo guardar el archivo de texto: " + ex.getMessage());
+        }
+    }
+
+    private void exportarClaveBinaria(Stage stage) {
+        String clave = txtClave.getText();
+        if (clave == null || clave.isEmpty()) {
+            mostrarError("Exportación cancelada", "No hay ninguna clave para exportar.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar clave binaria");
+        fileChooser.setInitialFileName("clave_otp.txt");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Archivos binarios (*.txt)", "*.txt")
+        );
+
+        java.io.File seleccionado = fileChooser.showSaveDialog(stage);
+        if (seleccionado == null) {
+            return;
+        }
+
+        try {
+            Path destino = seleccionado.toPath();
+            byte[] claveBytes = clave.getBytes(StandardCharsets.UTF_8);
+            exportadorService.exportarBinario(destino, claveBytes);
+            mostrarInfo("Exportación completada", "Clave binaria guardada en:\n" + destino.toAbsolutePath());
+        } catch (IOException ex) {
+            mostrarError("Error de E/S", "No se pudo guardar el archivo binario: " + ex.getMessage());
+        }
+    }
+
+    private void mostrarError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error de validación / OTP");
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarInfo(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
@@ -100,6 +184,36 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+}
+
+class ExportadorOtpService {
+
+    public void exportarTextoUtf8(Path destino, String contenido) throws IOException {
+        Path parent = destino.toAbsolutePath().getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        Files.writeString(
+                destino,
+                contenido,
+                StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+        );
+    }
+
+    public void exportarBinario(Path destino, byte[] datos) throws IOException {
+        Path parent = destino.toAbsolutePath().getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        Files.write(
+                destino,
+                datos,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+        );
     }
 }
 
@@ -155,14 +269,13 @@ class OneTimePadService {
         return salida;
     }
 }
+
 class GeneradorClaveOtp {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final int LONGITUD_CLAVE = 5_000;
 
     public static String generarClave5k() {
-        // Calculamos cuántos bytes aleatorios hacen falta para superar los 5.000 chars en Base64
-        // 5000 chars Base64 ≈ 3750 bytes; generamos 3752 bytes para ir sobrados y recortamos exacto.
         int numBytes = ((LONGITUD_CLAVE + 3) / 4) * 3;
         byte[] randomBytes = new byte[numBytes];
         SECURE_RANDOM.nextBytes(randomBytes);

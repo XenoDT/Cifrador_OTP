@@ -23,12 +23,13 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public class HelloApplication extends Application {
+
     private TextField txtClave;
     private TextArea txtMsg;
     private TextArea txtCifMsg;
     private final OneTimePadService otpService = new OneTimePadService();
     private final ExportadorOtpService exportadorService = new ExportadorOtpService();
-
+    private final StyleColors styleColors = new StyleColors();
     private final String estiloOscuro =
             "-fx-control-inner-background: black;" +
                     "-fx-background-color: black;" +
@@ -39,12 +40,12 @@ public class HelloApplication extends Application {
     public void start(Stage stage) {
         txtClave = new TextField();
         txtClave.setPromptText("CLAVE (al menos la misma longitud en bytes que el mensaje)");
-        txtClave.setStyle(estiloOscuro);
+
 
         txtMsg = new TextArea();
         txtMsg.setPromptText("Mensaje original...");
         txtMsg.setWrapText(true);
-        txtMsg.setStyle(estiloOscuro);
+
         VBox.setVgrow(txtMsg, Priority.ALWAYS);
 
         Button btnGenClave = new Button("Generar Clave");
@@ -52,12 +53,12 @@ public class HelloApplication extends Application {
 
         Button btnCif = new Button("Cifrar");
         btnCif.setPrefWidth(110);
-        btnCif.setStyle("-fx-background-radius: 20;");
+
         btnCif.setOnAction(e -> cifrar());
 
         Button btnDescif = new Button("Descifrar");
         btnDescif.setPrefWidth(110);
-        btnDescif.setStyle("-fx-background-radius: 20;");
+
         btnDescif.setOnAction(e -> descifrar());
 
         Button btnExportTxt = new Button("Exportar TXT");
@@ -77,15 +78,25 @@ public class HelloApplication extends Application {
         txtCifMsg = new TextArea();
         txtCifMsg.setPromptText("Mensaje cifrado (Base64)...");
         txtCifMsg.setWrapText(true);
-        txtCifMsg.setStyle(estiloOscuro);
+
         VBox.setVgrow(txtCifMsg, Priority.ALWAYS);
 
         VBox root = new VBox(12, txtClave, txtMsg, filaAcciones, filaExportar, txtCifMsg);
-        root.setStyle("-fx-background-color: #373737; -fx-border-color: white");
         root.setPadding(new Insets(25));
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 520, 540);
+        var resource = getClass().getResource("cyberpunk.css");
+        if (resource != null) {
+            scene.getStylesheets().add(resource.toExternalForm());
+        } else {
+            System.err.println("Aviso: no se encontró cyberpunk.css en el classpath/módulo.");
+        }
+        String cssUrl = String.valueOf(resource);
+        scene.getStylesheets().add(cssUrl);
+
+// Ejemplo de clase extra en un botón:
+        btnGenClave.getStyleClass().add("cyber-magenta");
         stage.setTitle("One-Time Pad - JavaFX");
         stage.setScene(scene);
         stage.show();

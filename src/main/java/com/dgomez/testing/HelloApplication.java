@@ -64,7 +64,7 @@ public class HelloApplication extends Application {
         Button btnExportTxt = new Button("Exportar TXT");
         btnExportTxt.setOnAction(e -> exportarMensajeCifrado(stage));
 
-        Button btnExportBin = new Button("Exportar Clave (.bin)");
+        Button btnExportBin = new Button("Exportar Clave");
         btnExportBin.setOnAction(e -> exportarClaveBinaria(stage));
 
         HBox filaAcciones = new HBox(15, btnCif, btnDescif, btnGenClave);
@@ -86,11 +86,11 @@ public class HelloApplication extends Application {
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 520, 540);
-        var resource = getClass().getResource("cyberpunk.css");
+        var resource = getClass().getResource("style.css");
         if (resource != null) {
             scene.getStylesheets().add(resource.toExternalForm());
         } else {
-            System.err.println("Aviso: no se encontró cyberpunk.css en el classpath/módulo.");
+            System.err.println("Aviso: no se encontró style.css en el classpath/módulo.");
         }
         String cssUrl = String.valueOf(resource);
         scene.getStylesheets().add(cssUrl);

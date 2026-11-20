@@ -10,7 +10,7 @@ Aplicación de escritorio en **Java 21 + JavaFX** para cifrar y descifrar mensaj
 - **Validación de longitud mínima:** Impide cifrar o descifrar si la clave tiene menos bytes (en UTF-8) que el mensaje o el texto cifrado decodificado.
 - **Generador de claves (`SecureRandom`):** Genera una clave de 5.000 caracteres basada en bytes aleatorios criptográficos (`java.security.SecureRandom`) codificados en Base64.
 - **Exportación a disco:** Permite guardar el mensaje cifrado en texto plano (UTF-8) y la clave actual en archivo desde un selector de archivos (`FileChooser`).
-- **Interfaz JavaFX:** Incluye soporte para hoja de estilos `cyberpunk.css`.
+- **Interfaz JavaFX:** Incluye soporte para hoja de estilos `style.css`.
 
 ## Reglas del One-Time Pad y limitaciones de esta implementación
 

@@ -29,13 +29,6 @@ public class HelloApplication extends Application {
     private TextArea txtCifMsg;
     private final OneTimePadService otpService = new OneTimePadService();
     private final ExportadorOtpService exportadorService = new ExportadorOtpService();
-    private final StyleColors styleColors = new StyleColors();
-    private final String estiloOscuro =
-            "-fx-control-inner-background: black;" +
-                    "-fx-background-color: black;" +
-                    "-fx-text-fill: cyan;" +
-                    "-fx-prompt-text-fill: white;";
-
     @Override
     public void start(Stage stage) {
         txtClave = new TextField();
@@ -65,7 +58,7 @@ public class HelloApplication extends Application {
         btnExportTxt.setOnAction(e -> exportarMensajeCifrado(stage));
 
         Button btnExportBin = new Button("Exportar Clave");
-        btnExportBin.setOnAction(e -> exportarClaveBinaria(stage));
+        btnExportBin.setOnAction(e -> exportarClave(stage));
 
         HBox filaAcciones = new HBox(15, btnCif, btnDescif, btnGenClave);
         filaAcciones.setAlignment(Pos.CENTER);
@@ -95,7 +88,6 @@ public class HelloApplication extends Application {
         String cssUrl = String.valueOf(resource);
         scene.getStylesheets().add(cssUrl);
 
-// Ejemplo de clase extra en un botón:
         btnGenClave.getStyleClass().add("cyber-magenta");
         stage.setTitle("One-Time Pad - JavaFX");
         stage.setScene(scene);
@@ -148,7 +140,7 @@ public class HelloApplication extends Application {
         }
     }
 
-    private void exportarClaveBinaria(Stage stage) {
+    private void exportarClave(Stage stage) {
         String clave = txtClave.getText();
         if (clave == null || clave.isEmpty()) {
             mostrarError("Exportación cancelada", "No hay ninguna clave para exportar.");
@@ -156,10 +148,10 @@ public class HelloApplication extends Application {
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Guardar clave binaria");
+        fileChooser.setTitle("Guardar clave");
         fileChooser.setInitialFileName("clave_otp.txt");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Archivos binarios (*.txt)", "*.txt")
+                new FileChooser.ExtensionFilter("Archivox txt (*.txt)", "*.txt")
         );
 
         java.io.File seleccionado = fileChooser.showSaveDialog(stage);
@@ -171,9 +163,9 @@ public class HelloApplication extends Application {
             Path destino = seleccionado.toPath();
             byte[] claveBytes = clave.getBytes(StandardCharsets.UTF_8);
             exportadorService.exportarBinario(destino, claveBytes);
-            mostrarInfo("Exportación completada", "Clave binaria guardada en:\n" + destino.toAbsolutePath());
+            mostrarInfo("Exportación completada", "Clave guardada en:\n" + destino.toAbsolutePath());
         } catch (IOException ex) {
-            mostrarError("Error de E/S", "No se pudo guardar el archivo binario: " + ex.getMessage());
+            mostrarError("Error de E/S", "No se pudo guardar el archivo: " + ex.getMessage());
         }
     }
 

@@ -41,6 +41,7 @@
 
 /* Botón base cyberpunk (Cian neón) */
 .button {
+    -fx-shape: "M 0 35 L 25 0 L 100 0 L 100 65 L 70 100 L 0 100 Z";
     -fx-background-color: linear-gradient(to bottom, #0b1c30, #07111e);
     -fx-text-fill: #00f0ff;
     -fx-border-color: #00f0ff;

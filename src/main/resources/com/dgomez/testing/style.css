@@ -1,119 +1,144 @@
+/* TemPad / TVA Temporal Pad Theme - JavaFX CSS */
 .root {
-    -fx-background-color: linear-gradient(to bottom right, #06080f, #11091c, #07111a);
-    -fx-border-color: #ff2a85;
+    -fx-background-color: radial-gradient(center 50% 45%, radius 85%, #18222d 0%, #0d131a 65%, #080c10 100%);
+    -fx-border-color: #d9822b;
     -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
     -fx-font-family: "JetBrains Mono", "Fira Code", "Consolas", "DejaVu Sans Mono", monospace;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 20, 0.35, 0, 4);
 }
 
-/* Campos de texto y áreas de texto */
+/* Campos de texto y áreas de texto (pantallas de lectura temporal) */
 .text-field,
 .text-area {
-    -fx-background-color: rgba(9, 13, 22, 0.92);
-    -fx-text-fill: #00f0ff;
-    -fx-prompt-text-fill: #58728a;
-    -fx-highlight-fill: #ff2a85;
-    -fx-highlight-text-fill: #ffffff;
-    -fx-border-color: #00f0ff;
+    -fx-background-color: rgba(11, 17, 23, 0.95);
+    -fx-text-fill: #ffaa2b;
+    -fx-prompt-text-fill: #6c7c8c;
+    -fx-highlight-fill: #ff8c1a;
+    -fx-highlight-text-fill: #0b1015;
+    -fx-border-color: #4a5b6d;
     -fx-border-width: 1.5;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
     -fx-font-size: 13px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.16), 8, 0.2, 0, 0);
+    -fx-padding: 6 10 6 10;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.65), 8, 0.3, 0, 1);
 }
 
-/* Área interna del TextArea (crucial en JavaFX para no ver el fondo blanco por defecto) */
+/* Área interna del TextArea (evita el fondo blanco por defecto de JavaFX) */
 .text-area .content {
-    -fx-background-color: #090d16;
-    -fx-background-radius: 3;
+    -fx-background-color: #0b1117;
+    -fx-background-radius: 2;
 }
 
 .text-area .scroll-pane {
     -fx-background-color: transparent;
 }
 
-/* Foco activo en inputs */
+/* Foco activo: línea temporal fijada en ámbar TVA */
 .text-field:focused,
 .text-area:focused {
-    -fx-border-color: #ff2a85;
-    -fx-text-fill: #7ef9ff;
-    -fx-effect: dropshadow(gaussian, rgba(255, 42, 133, 0.45), 14, 0.35, 0, 0);
+    -fx-border-color: #ff9e1b;
+    -fx-text-fill: #ffd175;
+    -fx-effect: dropshadow(gaussian, rgba(255, 158, 27, 0.35), 12, 0.25, 0, 0),
+    innershadow(gaussian, rgba(255, 158, 27, 0.12), 6, 0.2, 0, 0);
 }
 
-/* Botón base cyberpunk (Cian neón) */
+/* Botón base TemPad (Ámbar / Bronce TVA) */
 .button {
-    -fx-shape: "M 0 35 L 25 0 L 100 0 L 100 65 L 70 100 L 0 100 Z";
-    -fx-background-color: linear-gradient(to bottom, #0b1c30, #07111e);
-    -fx-text-fill: #00f0ff;
-    -fx-border-color: #00f0ff;
+    -fx-background-color: linear-gradient(to bottom, #2a2118, #17130f);
+    -fx-text-fill: #ffaa2b;
+    -fx-border-color: #c87d28;
     -fx-border-width: 1.5;
     -fx-border-radius: 3;
     -fx-background-radius: 3;
     -fx-padding: 8 16 8 16;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
+    -fx-letter-spacing: 0.8px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.22), 8, 0.25, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 8, 0.25, 0, 2);
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(to bottom, #123152, #0a1b2e);
-    -fx-text-fill: #ffffff;
-    -fx-border-color: #7ef9ff;
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.65), 16, 0.45, 0, 0);
+    -fx-background-color: linear-gradient(to bottom, #3d2e1e, #211a13);
+    -fx-text-fill: #ffe09e;
+    -fx-border-color: #ffb84d;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(255, 158, 27, 0.45), 14, 0.35, 0, 0);
 }
 
 .button:pressed,
 .button:armed {
-    -fx-background-color: #ff2a85;
-    -fx-text-fill: #07090f;
-    -fx-border-color: #ff77b0;
+    -fx-background-color: linear-gradient(to bottom, #ff9e1b, #d96b14);
+    -fx-text-fill: #0b1015;
+    -fx-border-color: #ffd685;
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
-    -fx-effect: dropshadow(gaussian, rgba(255, 42, 133, 0.75), 18, 0.5, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(255, 158, 27, 0.65), 16, 0.4, 0, 0);
 }
 
-/* Variante de acento magenta (por ejemplo: btn.getStyleClass().add("cyber-magenta")) */
+/* Variante secundaria: Alerta / Ramificación temporal (Rojo-Coral TVA) */
+/* Usa btn.getStyleClass().add("tv-alert") o conserva "cyber-magenta" */
+.button.tv-alert,
 .button.cyber-magenta {
-    -fx-background-color: linear-gradient(to bottom, #26091b, #14050e);
-    -fx-text-fill: #ff2a85;
-    -fx-border-color: #ff2a85;
-    -fx-effect: dropshadow(gaussian, rgba(255, 42, 133, 0.25), 8, 0.25, 0, 0);
+    -fx-background-color: linear-gradient(to bottom, #2e1515, #180c0d);
+    -fx-text-fill: #ff5c4d;
+    -fx-border-color: #c93b30;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 8, 0.25, 0, 2);
 }
 
+.button.tv-alert:hover,
 .button.cyber-magenta:hover {
-    -fx-background-color: linear-gradient(to bottom, #420d2e, #240719);
-    -fx-text-fill: #ffffff;
-    -fx-border-color: #ff77b0;
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-    -fx-effect: dropshadow(gaussian, rgba(255, 42, 133, 0.7), 16, 0.45, 0, 0);
+    -fx-background-color: linear-gradient(to bottom, #451c1b, #241011);
+    -fx-text-fill: #ff9e94;
+    -fx-border-color: #ff6e61;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(255, 92, 77, 0.45), 14, 0.35, 0, 0);
 }
 
+.button.tv-alert:pressed,
+.button.tv-alert:armed,
 .button.cyber-magenta:pressed,
 .button.cyber-magenta:armed {
-    -fx-background-color: #00f0ff;
-    -fx-text-fill: #07090f;
-    -fx-border-color: #ffffff;
+    -fx-background-color: linear-gradient(to bottom, #ff5c4d, #c93b30);
+    -fx-text-fill: #0d1115;
+    -fx-border-color: #ffc2bc;
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
-    -fx-effect: dropshadow(gaussian, rgba(0, 240, 255, 0.75), 18, 0.5, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(255, 92, 77, 0.65), 16, 0.4, 0, 0);
 }
 
-/* ScrollBars discretos */
+/* Variante opcional: Línea temporal estable / Confirmada (Verde Esmeralda TVA) */
+.button.tv-stable {
+    -fx-background-color: linear-gradient(to bottom, #132b24, #0b1814);
+    -fx-text-fill: #38e8a8;
+    -fx-border-color: #249e72;
+}
+
+.button.tv-stable:hover {
+    -fx-background-color: linear-gradient(to bottom, #1b3d33, #10241e);
+    -fx-text-fill: #96ffda;
+    -fx-border-color: #5cf5bd;
+    -fx-effect: dropshadow(gaussian, rgba(56, 232, 168, 0.4), 14, 0.35, 0, 0);
+}
+
+/* ScrollBars discretos estilo consola TVA */
 .scroll-bar:vertical,
 .scroll-bar:horizontal {
     -fx-background-color: transparent;
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: rgba(0, 240, 255, 0.35);
+    -fx-background-color: rgba(255, 158, 27, 0.32);
     -fx-background-radius: 2;
 }
 
 .scroll-bar .thumb:hover {
-    -fx-background-color: #ff2a85;
+    -fx-background-color: #ff9e1b;
 }
 
 .scroll-bar .increment-button,

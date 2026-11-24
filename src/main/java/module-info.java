@@ -1,10 +1,8 @@
 module com.dgomez.testing {
     requires javafx.controls;
-    requires javafx.fxml;
+    requires org.junit.jupiter.api;
 
-
-    opens com.dgomez.testing to javafx.fxml;
     exports com.dgomez.testing;
     exports com.dgomez.testing.service;
-    opens com.dgomez.testing.service to javafx.fxml;
+    opens com.dgomez.testing.service to org.junit.platform.commons;
 }

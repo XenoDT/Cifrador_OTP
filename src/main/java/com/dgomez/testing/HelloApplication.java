@@ -53,10 +53,10 @@ public class HelloApplication extends Application {
         btnDescif.setOnAction(e -> descifrar());
 
         Button btnExportTxt = new Button("Exportar TXT");
-        btnExportTxt.setOnAction(e -> exportarMensajeCifrado(stage));
+        btnExportTxt.setOnAction(e -> exportar(stage,btnExportTxt.getText()));
 
         Button btnExportBin = new Button("Exportar Clave");
-        btnExportBin.setOnAction(e -> exportarClave(stage));
+        btnExportBin.setOnAction(e -> exportar(stage,btnExportBin.getText()));
 
         HBox filaAcciones = new HBox(15, btnCif, btnDescif, btnGenClave);
         filaAcciones.setAlignment(Pos.CENTER);
@@ -110,44 +110,14 @@ public class HelloApplication extends Application {
         }
     }
 
-    private void exportarMensajeCifrado(Stage stage) {
-        String cifrado = txtCifMsg.getText();
-        if (cifrado == null || cifrado.isBlank()) {
-            mostrarError("Exportación cancelada", "No hay ningún mensaje cifrado para exportar.");
-            return;
-        }
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Guardar mensaje cifrado");
-        fileChooser.setInitialFileName("mensaje_cifrado.txt");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Archivos de texto (*.txt)", "*.txt")
-        );
-
-        java.io.File seleccionado = fileChooser.showSaveDialog(stage);
-        if (seleccionado == null) {
-            return;
-        }
-
-        try {
-            Path destino = seleccionado.toPath();
-            exportadorService.exportarTextoUtf8(destino, cifrado);
-            mostrarInfo("Exportación completada", "Mensaje cifrado guardado en:\n" + destino.toAbsolutePath());
-        } catch (IOException ex) {
-            mostrarError("Error de E/S", "No se pudo guardar el archivo de texto: " + ex.getMessage());
-        }
-    }
-
-    private void exportarClave(Stage stage) {
-        String clave = txtClave.getText();
-        if (clave == null || clave.isEmpty()) {
+    private void exportar(Stage stage,String txt) {
+        if (txt == null || txt.isEmpty()) {
             mostrarError("Exportación cancelada", "No hay ninguna clave para exportar.");
             return;
         }
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar clave");
-        fileChooser.setInitialFileName("clave_otp.txt");
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Archivo txt (*.txt)", "*.txt")
         );
@@ -159,8 +129,8 @@ public class HelloApplication extends Application {
 
         try {
             Path destino = seleccionado.toPath();
-            exportadorService.exportarTextoUtf8(destino, clave);
-            mostrarInfo("Exportación completada", "Clave guardada en:\n" + destino.toAbsolutePath());
+            exportadorService.exportarTextoUtf8(destino, txt);
+            mostrarInfo("Exportación completada", "Guardado en:\n" + destino.toAbsolutePath());
         } catch (IOException ex) {
             mostrarError("Error de E/S", "No se pudo guardar el archivo: " + ex.getMessage());
         }

@@ -1,6 +1,6 @@
 # Cifrador OTP (JavaFX)
 
-Aplicación de escritorio en **Java 21 + JavaFX** para cifrar y descifrar mensajes de texto mediante una operación **XOR** inspirada en el esquema **One-Time Pad (OTP)**, con generación de claves y exportación a archivo.
+Aplicación de escritorio para cifrar y descifrar mensajes de texto mediante una operación **XOR** inspirada en el esquema **One-Time Pad (OTP)**, con generación de claves y exportación a archivo.
 
 > **Aviso de uso:** Proyecto de práctica / aprendizaje. No está diseñado para proteger información sensible o crítica en producción.
 
@@ -25,7 +25,7 @@ Para que un OTP cumpla su modelo teórico de seguridad, deben cumplirse condicio
 ## Requisitos y ejecución
 
 - **Java 21** (JDK 21) y **JavaFX** configurado en tu proyecto o herramienta de construcción.
-- Archivo `cyberpunk.css` en el mismo paquete/classpath (`com/dgomez/testing/cyberpunk.css`) si deseas aplicar los estilos visuales.
+- Archivo `style.css` en el mismo paquete/classpath (`com/dgomez/testing/style.css`) si deseas aplicar los estilos visuales.
 
 ```bash
 git clone [https://github.com/XenoDT/Cifrador_OTP.git](https://github.com/XenoDT/Cifrador_OTP.git)
